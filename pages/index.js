@@ -1,12 +1,13 @@
 import React from 'react'
-import Head from 'next/head'
-import Nav from '../components/nav'
-import ProbeDream from './probedream'
-import PButton from '../components/pbutton'
+import Link from "next/link";
+import Title from '../components/title'
+ 
 
 const Home = () => (
   <div>
-     <PButton>ProbeDream</PButton> 
+     <Title>ProbeDream</Title> 
+     <div><Link href="/page1"><a>go to page1!</a></Link></div>
+     <div><Link href="/page2"><a>go to page2!</a></Link></div>
   </div>
 )
 

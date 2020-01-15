@@ -1,0 +1,1 @@
+export default ({children})=>(<h3>Welcome to you Next {children}!</h3>)
