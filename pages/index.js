@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Title from '../components/title';
 import Router from "next/router";
+import page3 from './page3';
 
 const Home = () => (
   <div>
@@ -19,6 +20,9 @@ const Home = () => (
 
     <button onClick={()=>{Router.push("/page1")}}>goA</button>
     <button onClick={()=>{Router.push("/page2")}}>goB</button>
+    <br/>
+    <Link href="/page3?name=小p"><a>他是小p</a></Link>
+ 
   </div>
 );
 
