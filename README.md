@@ -205,3 +205,22 @@ const gotoPage5 = ()=>{
 <Link href={{pathname:"routername",query:{name:"value"}}}><a>content</a></Link>
 
 ```
+### 对应的next中[路由的钩子函数](https://nextjs.org/docs/api-reference/next/router)
+
+1. routeChangeStart 路由发生变化的时候
+2. routeChangeComplete 路由结束变化时候
+3. beforeHistoryChange 浏览器history触发前
+4. routeChangeError 路由器跳转发生错误时
+
+对应的还有两种时间都是针对于hash模式的,如下所示:
+- hashChangeStart
+- hashChangeComplete
+
+### 应用
+
+一般都是通过Router.events.on的方式:
+```js
+Router.events.on("eventName",(...args)=>{
+	//TODO
+});
+```
