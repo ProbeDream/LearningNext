@@ -224,3 +224,49 @@ Router.events.on("eventName",(...args)=>{
 	//TODO
 });
 ```
+
+### 使用getInitialProps中使用Axios获取远程数据
+
+Next.js通过提供了getInitialProps的方式获取远端数据,并且是该框架的约定,因此只能够通过该方法来获取数据! **因此也就没有必要在生命周期函数中获取!** 虽然说可以在React的生命周期函数componentDidMount中使用但是使用了next就必须准守约定!
+
+那么既然需要配置网络请求库Axios的使用,那么对应的就需要安装对应的Axios的依赖:
+```bash
+  yarn add Axios
+```
+```bash
+  我们根据提供的API接口:https://www.easy-mock.com/mock/5cfcce489dc7c36bd6da2c99/xiaojiejie/getList 对该接口进行请求操作!
+```
+
+代码如下所示:
+`/getPage6.js`
+```js
+
+import Axios from "axios";
+const requestURL = "https://www.easy-mock.com/mock/5cfcce489dc7c36bd6da2c99/xiaojiejie/getList";
+page6.getInitialProps = async()=>{
+   const promise = new Promise((resolve)=>{
+      Axios(requestURL).then(response=>{
+        /* 对应的结果:console.log(`响应的结果为:${response}`); */
+        resolve(response.data.data);
+      })
+   });
+   /* 拿到的是一个解析promise对象之后的数据! */
+   return await promise;
+}
+
+```
+但是对应的仅仅只是拿到数据的同时是远远不够的,我们还要通过将对应的数据渲染出来才行!
+
+```js
+ import {withRouter} from "next/router";
+ import Link from "next/link";
+ const page6 = ({router,list})=>(
+   <div>  
+      <div>Hello {router.query.name} 获取到的数据为:{list}</div>
+      <br/>
+      {list}
+   </div>) 
+
+export default withRouter(page6);   
+```
+
