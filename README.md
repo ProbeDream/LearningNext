@@ -198,75 +198,204 @@ const gotoPage4 = () => {
   });
 };
 
-const gotoPage5 = ()=>{
-  Router.push("/routername?name=value");
-}
+const gotoPage5 = () => {
+  Router.push('/routername?name=value');
+};
 /* 标签传递的方式 */
-<Link href={{pathname:"routername",query:{name:"value"}}}><a>content</a></Link>
-
+<Link href={{ pathname: 'routername', query: { name: 'value' } }}>
+  <a>content</a>
+</Link>;
 ```
-### 对应的next中[路由的钩子函数](https://nextjs.org/docs/api-reference/next/router)
+
+### 对应的 next 中[路由的钩子函数](https://nextjs.org/docs/api-reference/next/router)
 
 1. routeChangeStart 路由发生变化的时候
 2. routeChangeComplete 路由结束变化时候
-3. beforeHistoryChange 浏览器history触发前
+3. beforeHistoryChange 浏览器 history 触发前
 4. routeChangeError 路由器跳转发生错误时
 
-对应的还有两种时间都是针对于hash模式的,如下所示:
+对应的还有两种时间都是针对于 hash 模式的,如下所示:
+
 - hashChangeStart
 - hashChangeComplete
 
 ### 应用
 
-一般都是通过Router.events.on的方式:
+一般都是通过 Router.events.on 的方式:
+
 ```js
-Router.events.on("eventName",(...args)=>{
-	//TODO
+Router.events.on('eventName', (...args) => {
+  //TODO
 });
 ```
 
-### 使用getInitialProps中使用Axios获取远程数据
+### 使用 getInitialProps 中使用 Axios 获取远程数据
 
-Next.js通过提供了getInitialProps的方式获取远端数据,并且是该框架的约定,因此只能够通过该方法来获取数据! **因此也就没有必要在生命周期函数中获取!** 虽然说可以在React的生命周期函数componentDidMount中使用但是使用了next就必须准守约定!
+Next.js 通过提供了 getInitialProps 的方式获取远端数据,并且是该框架的约定,因此只能够通过该方法来获取数据! **因此也就没有必要在生命周期函数中获取!** 虽然说可以在 React 的生命周期函数 componentDidMount 中使用但是使用了 next 就必须准守约定!
 
-那么既然需要配置网络请求库Axios的使用,那么对应的就需要安装对应的Axios的依赖:
+那么既然需要配置网络请求库 Axios 的使用,那么对应的就需要安装对应的 Axios 的依赖:
+
 ```bash
   yarn add Axios
 ```
+
 ```bash
   我们根据提供的API接口:https://www.easy-mock.com/mock/5cfcce489dc7c36bd6da2c99/xiaojiejie/getList 对该接口进行请求操作!
 ```
 
 代码如下所示:
 `/getPage6.js`
+
 ```js
-
-import Axios from "axios";
-const requestURL = "https://www.easy-mock.com/mock/5cfcce489dc7c36bd6da2c99/xiaojiejie/getList";
-page6.getInitialProps = async()=>{
-   const promise = new Promise((resolve)=>{
-      Axios(requestURL).then(response=>{
-        /* 对应的结果:console.log(`响应的结果为:${response}`); */
-        resolve(response.data.data);
-      })
-   });
-   /* 拿到的是一个解析promise对象之后的数据! */
-   return await promise;
-}
-
+import Axios from 'axios';
+const requestURL =
+  'https://www.easy-mock.com/mock/5cfcce489dc7c36bd6da2c99/xiaojiejie/getList';
+page6.getInitialProps = async () => {
+  const promise = new Promise(resolve => {
+    Axios(requestURL).then(response => {
+      /* 对应的结果:console.log(`响应的结果为:${response}`); */
+      resolve(response.data.data);
+    });
+  });
+  /* 拿到的是一个解析promise对象之后的数据! */
+  return await promise;
+};
 ```
+
 但是对应的仅仅只是拿到数据的同时是远远不够的,我们还要通过将对应的数据渲染出来才行!
 
 ```js
- import {withRouter} from "next/router";
- import Link from "next/link";
- const page6 = ({router,list})=>(
-   <div>  
-      <div>Hello {router.query.name} 获取到的数据为:{list}</div>
-      <br/>
-      {list}
-   </div>) 
+import { withRouter } from 'next/router';
+import Link from 'next/link';
+const page6 = ({ router, list }) => (
+  <div>
+    <div>
+      Hello {router.query.name} 获取到的数据为:{list}
+    </div>
+    <br />
+    {list}
+  </div>
+);
 
-export default withRouter(page6);   
+export default withRouter(page6);
 ```
 
+### style jsx 的使用
+
+主要的功能还是样式的编写,所有的样式都需要用花括号包裹!详情看代码:
+
+```js
+const page7 = () => (
+  <div>
+    <span>Hello ProbeDream This about pages Collection page7!</span>
+    <style jsx>
+      {`
+        span {
+          color: red;
+        }
+      `}
+    </style>
+  </div>
+);
+export default page7;
+```
+
+并且对应的 style jsx 是随机添加类名的并且不会污染全局变量名!
+
+对应的如果说是动态切换效果的话,可以这样做:
+
+```js
+import { useState } from 'react';
+const page9 = () => {
+  const [color, setColor] = useState('blue');
+  return (
+    <div>
+      <span>Hello ProbeDream!</span>
+      <button
+        onClick={() => {
+          setColor(color === 'blue' ? 'read' : 'blue');
+        }}
+      >
+        Switch to Color!
+      </button>
+      <style jsx>
+        {`
+          span {
+            color: ${color};
+          }
+        `}
+      </style>
+    </div>
+  );
+};
+
+export default page9;
+```
+
+### next 中的懒加载
+
+比如说我们想显示对应的时间,就需要用到对应的组件`moment`因此常用的方法如下所示:
+
+```js
+import React, { useState } from 'react';
+import moment from 'moment';
+
+const Time = () => {
+  const [nowTime, setTime] = useState(Date.now());
+  const changeTime = () => {
+    setTime(moment(Date.now()).format());
+  };
+  return (
+    <div>
+      <div>现在的时间为:{nowTime}</div>
+      <button onClick={changeTime}>Click Change Time!</button>
+    </div>
+  );
+};
+
+export default Time;
+```
+
+对应的看上去的代码看起来非常清晰,也就是说半数的页面用到了对应的 moment 库,它就会以公共库的形式进行打包发布,**就算是有的页面没有使用 moment 库也会进行加载!** 对应的这样的情况下就是浪费了!
+
+我们我们就需要使用到对应的技术 **懒加载(lazy loading)** 就非常重要了,话不多说上代码:
+
+```js
+import React, { useState } from 'react';
+const Time = () => {
+  const [time, setTime] = useState(Date.now());
+  const changeTime = async () => {
+    const moment = await import('moment');
+    setTime(moment.default(Date.now()).format());
+  };
+  return (
+    <div>
+      <div>现在时间为:{nowTime}</div>
+      <button onClick={changeTime}> Click Change Time!</button>
+    </div>
+  );
+};
+```
+
+对应的懒加载模块就是这样的!
+如果说是懒加载自定义的组件那么应该如何做呢?
+
+1. 定义对应的自定义组件:Customer
+
+```js
+export default () => <div>This is Customer Component!</div>;
+```
+
+2. 通过对应的 next/dynamic 来做懒加载!
+
+```js
+import dynamic from 'next/dynamic';
+const componentPathName = '../components/customer';
+const Customer = dynamic(import(componentPathName));
+const Home = () => (
+  <div>
+    <span>下面是加载的自定义的组件</span>
+    <Customer/>
+  </div>
+);
+```
