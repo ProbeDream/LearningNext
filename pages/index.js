@@ -13,6 +13,9 @@ const Home = () => {
     });
   };
 
+  const goToPage6 = ()=>{
+    Router.push({pathname:"/page6",query:{name:"Amy"}});
+  }
   Router.events.on('routeChangeStart', (...args) => {
     console.log(`1.routeChangeStart路由发生变化的时候,参数为:${args}`);
   });
@@ -79,6 +82,9 @@ const Home = () => {
       </Link>
       <br/>
       <button onClick={goToPage5}>goToPage5</button>
+      <br/>
+      <button onClick={()=>{Router.push({pathname:"/page6",query:{name:"Amy"}})}}>goToPage6</button>
+      
     </div>
   );
 };
