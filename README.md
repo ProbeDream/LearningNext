@@ -395,7 +395,73 @@ const Customer = dynamic(import(componentPathName));
 const Home = () => (
   <div>
     <span>下面是加载的自定义的组件</span>
-    <Customer/>
+    <Customer />
   </div>
 );
+```
+
+### 更好地 SEO 支持操作
+
+对应的我们应该做的是对 head 的使用和对 next 提供的 head 做二次封装操作!
+
+```js
+import Head from 'next/head';
+
+const Header = () => (
+  <div>
+    <Head>
+      <title>This is about ProbeDream Website!</title>
+      <meta charset="utf-8" />
+    </Head>
+  </div>
+);
+
+export default Header;
+```
+
+对应的为了更加方便的使用直接作为组件应用到不同的页面中即可!
+
+### Next 下支持 AntDesign
+
+1. 安装对应的依赖 Antd 和 @zeit/next-css
+
+- antd:React 组件库
+- @zeit/next-css:next 支持 css 的依赖
+
+安装好之后我们在对应的 next.config.js 中配置对应的信息,如下所示:
+
+```js
+const withCSS = require('@zeit/next-css');
+if (typeof require !== 'undefined') {
+  require.extensions['.css'] = file => {};
+}
+
+module.exports = withCSS({});
+```
+这是对CSS的支持!
+
+接下来处理antd中的按需加载的问题了! 对应的安装插件: **babel-plugin-import** 之后通过对应的 **.babelrc** 配置对应的按需加载功能!
+```babelrc
+  {
+    "presets":["next/babel"],
+    "plugins":[
+      [
+        "import",{
+          "libraryName":"antd","style":"css"
+        }
+      ]
+    ]
+  }
+```
+
+### 生产环境打包问题
+如果只是单纯的使用打包使用对应的 next build是没有问题的,**如果说引入了ant design** 那么对应的就会出现问题:
+因此我们可以通过 `_app.js` 全局引入css解决该问题:
+```js
+import App from "next/app";
+
+import "antd/dist/antd.css";
+
+export default  App;
+
 ```
